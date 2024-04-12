@@ -1,0 +1,8 @@
+.descripcion-column {
+    max-width: 300px; /* ajusta este valor según sea necesario */
+    overflow-x: auto; /* añade una barra de desplazamiento horizontal si es necesario */
+}
+
+.custom-search-input {
+    width: 200px;
+}
