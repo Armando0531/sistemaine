@@ -174,7 +174,22 @@ return [
             'icon' => 'ti ti-id-badge',
             'url' => '/areasadmin'
         ],
-
+        [
+            'text' => 'Registro entradas',
+            'icon' => 'ti ti-id-badge',
+            'url' => '/entrada'
+        ],
+        [
+            'text' => 'Registro salidas',
+            'icon' => 'ti ti-id-badge',
+            'url' => '/salida'
+        ],
+        [
+            'text' => 'Reportes',
+            'icon' => 'ti ti-id-badge',
+            'url' => '/reportes'
+        ],
+        
 
     ],
 

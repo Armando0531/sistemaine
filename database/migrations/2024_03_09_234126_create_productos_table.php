@@ -6,9 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('productos', function (Blueprint $table) {
@@ -16,22 +13,24 @@ return new class extends Migration
             $table->string('nombre_articulo');
             $table->text('descripcion')->nullable();
             $table->unsignedBigInteger('id_categoria');
-            $table->foreign('id_categoria')->references('id')->on('categorias');
-            $table->unsignedBigInteger('unidad_medida_id'); 
-            $table->foreign('unidad_medida_id')->references('id')->on('unidades');
+            $table->unsignedBigInteger('unidad_medida_id');
             $table->date('fecha_vencimiento')->nullable();
-            $table->date('fecha_entrada');
-            $table->string('clave_cucop', 13);
+            $table->string('clave_cucop', 13)->unique(); // Clave CUCOP única
             $table->integer('cantidad');
             $table->timestamps();
+
+            $table->foreign('id_categoria')->references('id')->on('categorias')->onDelete('cascade');
+            $table->foreign('unidad_medida_id')->references('id')->on('unidades')->onDelete('cascade');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
+        Schema::table('productos', function (Blueprint $table) {
+            $table->dropForeign(['id_categoria']);
+            $table->dropForeign(['unidad_medida_id']);
+        });
+
         Schema::dropIfExists('productos');
     }
 };

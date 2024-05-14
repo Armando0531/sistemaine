@@ -27,7 +27,6 @@ class ProductoController extends Controller
             ->orWhere('descripcion', 'like', "%{$search}%")
             ->orWhere('clave_cucop', 'like', "%{$search}%")
             ->orWhere('fecha_vencimiento', 'like', "%$search%")
-            ->orWhere('fecha_entrada', 'like', "%$search%")
             ->paginate(10);
 
         return view('producto.index', compact('productos', 'search'))

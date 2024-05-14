@@ -1,7 +1,7 @@
 @extends('tablar::page')
 
 @section('title')
-    Producto
+    Salida
 @endsection
 
 @section('content')
@@ -12,16 +12,16 @@
                 <div class="col">
                     <!-- Page pre-title -->
                     <div class="page-pretitle">
-                        Lista
+                        List
                     </div>
                     <h2 class="page-title">
-                        Productos
+                        {{ __('Salida ') }}
                     </h2>
                 </div>
                 <!-- Page title actions -->
                 <div class="col-12 col-md-auto ms-auto d-print-none">
                     <div class="btn-list">
-                        <a href="{{ route('productos.create') }}" class="btn btn-primary d-none d-sm-inline-block">
+                        <a href="{{ route('salida.create') }}" class="btn btn-primary d-none d-sm-inline-block">
                             <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
                             <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
                                  viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
@@ -30,7 +30,7 @@
                                 <line x1="12" y1="5" x2="12" y2="19"/>
                                 <line x1="5" y1="12" x2="19" y2="12"/>
                             </svg>
-                            Crear Producto
+                            Create Salida
                         </a>
                     </div>
                 </div>
@@ -47,7 +47,7 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title">Productos</h3>
+                            <h3 class="card-title">Salida</h3>
                         </div>
                         <div class="card-body border-bottom py-3">
                             <div class="d-flex">
@@ -57,25 +57,23 @@
                                         <input type="text" class="form-control form-control-sm" value="10" size="3"
                                                aria-label="Invoices count">
                                     </div>
-                                    entradas
+                                    entries
                                 </div>
                                 <div class="ms-auto text-muted">
+                                    Search:
                                     <div class="ms-2 d-inline-block">
-                                        <form action="{{ route('productos.index') }}" method="GET">
-                                            <div class="input-group input-group-sm">
-                                                <input type="text" name="search" class="form-control form-control-sm" value="{{ $search ?? '' }}" aria-label="Buscar producto" placeholder="Buscar por nombre, descripción o clave CUCOP">
-                                                <button type="submit" class="btn btn-sm btn-primary">Buscar</button>
-                                            </div>
-                                        </form>
+                                        <input type="text" class="form-control form-control-sm"
+                                               aria-label="Search invoice">
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="table-responsive min-vh-100" style="overflow-x: auto;">
+                        <div class="table-responsive min-vh-100">
                             <table class="table card-table table-vcenter text-nowrap datatable">
                                 <thead>
                                 <tr>
-                                    
+                                    <th class="w-1"><input class="form-check-input m-0 align-middle" type="checkbox"
+                                                           aria-label="Select all invoices"></th>
                                     <th class="w-1">No.
                                         <!-- Download SVG icon from http://tabler-icons.io/i/chevron-up -->
                                         <svg xmlns="http://www.w3.org/2000/svg"
@@ -87,50 +85,47 @@
                                         </svg>
                                     </th>
                                     
-										<th>Nombre Articulo</th>
-										<th>Descripcion</th>
-										<th>Categoria</th>
-										<th>Unidad Medida</th>
-										<th>Fecha Vencimiento</th>
 										<th>Clave Cucop</th>
-										<th>Cantidad</th>
+										<th>Id Usuario</th>
+										<th>Id Area Administrativa</th>
+										<th>Cantidad Salida</th>
+										<th>Fecha Salida</th>
 
                                     <th class="w-1"></th>
                                 </tr>
                                 </thead>
 
                                 <tbody>
-                                @forelse ($productos as $producto)
+                                @forelse ($salidas as $salida)
                                     <tr>
-                                        
+                                        <td><input class="form-check-input m-0 align-middle" type="checkbox"
+                                                   aria-label="Select salida"></td>
                                         <td>{{ ++$i }}</td>
                                         
-											<td>{{ $producto->nombre_articulo }}</td>
-											<td style="max-width: 150px; overflow-x: auto;">{{ $producto->descripcion }}</td>
-											<td>{{ $producto->categoria->nombre_categoria }}</td>
-											<td>{{ $producto->unidade->unidad_medida }}</td>
-											<td>{{ $producto->fecha_vencimiento }}</td>
-											<td>{{ $producto->clave_cucop }}</td>
-											<td>{{ $producto->cantidad }}</td>
+											<td>{{ $salida->clave_cucop }}</td>
+											<td>{{ $salida->id_usuario }}</td>
+											<td>{{ $salida->id_area_administrativa }}</td>
+											<td>{{ $salida->cantidad_salida }}</td>
+											<td>{{ $salida->fecha_salida }}</td>
 
                                         <td>
                                             <div class="btn-list flex-nowrap">
                                                 <div class="dropdown">
                                                     <button class="btn dropdown-toggle align-text-top"
                                                             data-bs-toggle="dropdown">
-                                                        Acciones
+                                                        Actions
                                                     </button>
                                                     <div class="dropdown-menu dropdown-menu-end">
                                                         <a class="dropdown-item"
-                                                           href="{{ route('productos.show',$producto->id) }}">
-                                                            Ver
+                                                           href="{{ route('salida.show',$salida->id) }}">
+                                                            View
                                                         </a>
                                                         <a class="dropdown-item"
-                                                           href="{{ route('productos.edit',$producto->id) }}">
-                                                            Editar
+                                                           href="{{ route('salida.edit',$salida->id) }}">
+                                                            Edit
                                                         </a>
                                                         <form
-                                                            action="{{ route('productos.destroy',$producto->id) }}"
+                                                            action="{{ route('salida.destroy',$salida->id) }}"
                                                             method="POST">
                                                             @csrf
                                                             @method('DELETE')
@@ -138,7 +133,7 @@
                                                                     onclick="if(!confirm('Do you Want to Proceed?')){return false;}"
                                                                     class="dropdown-item text-red"><i
                                                                     class="fa fa-fw fa-trash"></i>
-                                                                Eliminar
+                                                                Delete
                                                             </button>
                                                         </form>
                                                     </div>
@@ -154,7 +149,7 @@
                             </table>
                         </div>
                        <div class="card-footer d-flex align-items-center">
-                            {!! $productos->links('tablar::pagination') !!}
+                            {!! $salidas->links('tablar::pagination') !!}
                         </div>
                     </div>
                 </div>

@@ -43,16 +43,6 @@
     </div>
 </div>
 <div class="form-group mb-3">
-    <label class="form-label">   {{ Form::label('fecha_entrada') }}</label>
-    <div>
-        {{ Form::text('fecha_entrada', $producto->fecha_entrada, ['class' => 'form-control' .
-        ($errors->has('fecha_entrada') ? ' is-invalid' : ''), 'placeholder' => 'Fecha Entrada']) }}
-        {!! $errors->first('fecha_entrada', '<div class="invalid-feedback">:message</div>') !!}
-        <small class="form-hint">producto <b>fecha_entrada</b> instruction.</small>
-    </div>
-</div>
-
-<div class="form-group mb-3">
     <label class="form-label">   {{ Form::label('clave_cucop') }}</label>
     <div>
         {{ Form::text('clave_cucop', $producto->clave_cucop, ['class' => 'form-control' .

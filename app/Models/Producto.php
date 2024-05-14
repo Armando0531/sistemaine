@@ -13,7 +13,6 @@ use Illuminate\Database\Eloquent\Model;
  * @property $id_categoria
  * @property $unidad_medida_id
  * @property $fecha_vencimiento
- * @property $fecha_entrada
  * @property $clave_cucop
  * @property $cantidad
  * @property $created_at
@@ -31,11 +30,9 @@ class Producto extends Model
 		'nombre_articulo' => 'required',
 		'id_categoria' => 'required',
 		'unidad_medida_id' => 'required',
-		'fecha_entrada' => 'required',
 		'clave_cucop' => 'required',
 		'cantidad' => 'required|integer',
         'fecha_vencimiento' => 'nullable|date_format:Y-m-d',
-        'fecha_entrada' => 'required|date_format:Y-m-d',
     ];
 
     protected $perPage = 20;
@@ -45,7 +42,7 @@ class Producto extends Model
      *
      * @var array
      */
-    protected $fillable = ['nombre_articulo','descripcion','id_categoria','unidad_medida_id','fecha_vencimiento','fecha_entrada','clave_cucop','cantidad'];
+    protected $fillable = ['nombre_articulo','descripcion','id_categoria','unidad_medida_id','fecha_vencimiento','clave_cucop','cantidad'];
 
 
     /**
@@ -63,6 +60,14 @@ class Producto extends Model
     {
         return $this->hasOne('App\Models\Unidade', 'id', 'unidad_medida_id');
     }
-    
+    public function entradas()
+    {
+        return $this->hasMany('App\Models\Entrada', 'clave_cucop', 'clave_cucop');
+    }
+
+    public function salidas()
+    {
+        return $this->hasMany('App\Models\Salida', 'clave_cucop', 'clave_cucop');
+    }
 
 }
