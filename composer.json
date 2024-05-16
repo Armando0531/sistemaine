@@ -16,6 +16,7 @@
         "laravel/tinker": "^2.8",
         "phpoffice/phpspreadsheet": "^2.0",
         "phpoffice/phpword": "^1.2",
+        "spatie/laravel-permission": "^6.7",
         "takielias/tablar": "^4.10"
     },
     "require-dev": {

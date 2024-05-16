@@ -176,18 +176,23 @@ return [
         ],
         [
             'text' => 'Registro entradas',
-            'icon' => 'ti ti-id-badge',
+            'icon' => 'ti ti-upload',
             'url' => '/entrada'
         ],
         [
             'text' => 'Registro salidas',
-            'icon' => 'ti ti-id-badge',
+            'icon' => 'ti ti-download',
             'url' => '/salida'
         ],
         [
             'text' => 'Reportes',
-            'icon' => 'ti ti-id-badge',
+            'icon' => 'ti ti-printer',
             'url' => '/reportes'
+        ],
+        [
+            'text' => 'Control Usuarios',
+            'icon' => 'ti ti-user',
+            'url' => '/user'
         ],
         
 

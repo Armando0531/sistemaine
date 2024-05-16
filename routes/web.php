@@ -15,8 +15,14 @@ Route::get('/home', [\App\Http\Controllers\HomeController::class, 'index'])->nam
 Auth::routes();
 
 Route::get('/home', [\App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::get('/reportes', [ReporteController::class, 'showForm'])->name('reportes.form');
-Route::get('/notifications', 'NotificationController@showNotifications')->name('notifications.show');
+//Route::get('/reportes', [ReporteController::class, 'showForm'])->name('reportes.form');
+
+Route::middleware('admin')->group(function () {
+    //Route::resource('/usuarios', App\Http\Controllers\UserController::class);
+    Route::get('/reportes', [ReporteController::class, 'showForm'])->name('reportes.form');
+    Route::post('/reportes/generate', [ReporteController::class, 'generate'])->name('reportes.generate');
+    Route::resource('/user', App\Http\Controllers\UserController::class);
+});
 
 
 Route::resource('/unidades', App\Http\Controllers\UnidadeController::class);
@@ -28,5 +34,5 @@ Route::resource('/entrada', App\Http\Controllers\EntradaController::class);
 Route::resource('/salida', App\Http\Controllers\SalidaController::class);
 Route::resource('/salida', App\Http\Controllers\SalidaController::class);
 
-Route::post('/reportes/generate', [ReporteController::class, 'generate'])->name('reportes.generate');
+//Route::post('/reportes/generate', [ReporteController::class, 'generate'])->name('reportes.generate');
 

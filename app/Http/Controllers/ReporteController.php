@@ -9,6 +9,7 @@ use PhpOffice\PhpWord\PhpWord;
 use PhpOffice\PhpWord\IOFactory as WordIOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use Carbon\Carbon;
 
 class ReporteController extends Controller
 {
@@ -24,7 +25,10 @@ class ReporteController extends Controller
                         }, 'salidas' => function($query) use ($request) {
                             $query->whereBetween('fecha_salida', [$request->fecha_inicio, $request->fecha_fin]);
                         }])
-                        ->firstOrFail();
+                        ->first();
+        if (!$producto) {
+            return back()->with('error', 'No se pudo encontrar el producto o no es posible generar el reporte.');
+        }
 
         $totalEntradas = $producto->entradas->sum('cantidad_entrada');
         $totalSalidas = $producto->salidas->sum('cantidad_salida');
@@ -36,14 +40,39 @@ class ReporteController extends Controller
         } elseif ($request->formato == 'word') {
             $phpWord = new PhpWord();
             $section = $phpWord->addSection();
-            $section->addText("Reporte de Producto");
-            $section->addText("Nombre: {$producto->nombre_articulo}");
-            $section->addText("Descripción: {$producto->descripcion}");
-            $section->addText("Clave CUCOP: {$producto->clave_cucop}");
-            $section->addText("Unidad de Medida: {$producto->unidade->unidad_medida}");
-            $section->addText("Total Entradas: {$totalEntradas}");
-            $section->addText("Total Salidas: {$totalSalidas}");
-            $section->addText("Total Disponible: {$totalDisponible}");
+            $section->addText("Reporte de Producto", ['bold' => true, 'size' => 16]);
+            $section->addText("Nombre: {$producto->nombre_articulo}", ['size' => 12]);
+            $section->addText("Descripción: {$producto->descripcion}", ['size' => 12]);
+            $section->addText("Clave CUCOP: {$producto->clave_cucop}", ['size' => 12]);
+            $section->addText("Unidad de Medida: {$producto->unidade->unidad_medida}", ['size' => 12]);
+            $section->addText("Total Entradas: {$totalEntradas}", ['size' => 12]);
+            $section->addText("Total Salidas: {$totalSalidas}", ['size' => 12]);
+            $section->addText("Total Disponible: {$totalDisponible}", ['size' => 12]);
+
+            $tableEntradas = $section->addTable();
+            $tableEntradas->addRow();
+            $tableEntradas->addCell(5000)->addText("Fecha de Entrada");
+            $tableEntradas->addCell(5000)->addText("Cantidad Entrada");
+
+            foreach ($producto->entradas as $entrada) {
+                $fecha = new Carbon($entrada->fecha_entrada);
+                $tableEntradas->addRow();
+                $tableEntradas->addCell(5000)->addText($fecha->toDateString());
+                $tableEntradas->addCell(5000)->addText($entrada->cantidad_entrada);
+            }
+
+            $tableSalidas = $section->addTable();
+            $tableSalidas->addRow();
+            $tableSalidas->addCell(5000)->addText("Fecha de Salida");
+            $tableSalidas->addCell(5000)->addText("Cantidad Salida");
+
+            foreach ($producto->salidas as $salida) {
+                $fechaSalida = new Carbon($salida->fecha_salida);
+                $tableSalidas->addRow();
+                $tableSalidas->addCell(5000)->addText($fechaSalida->toDateString());
+                $tableSalidas->addCell(5000)->addText($salida->cantidad_salida);
+            }
+
             $writer = WordIOFactory::createWriter($phpWord, 'Word2007');
             $filename = 'reporte.docx';
             header('Content-Type: application/vnd.openxmlformats-officedocument.wordprocessingml.document');
@@ -67,6 +96,30 @@ class ReporteController extends Controller
             $sheet->setCellValue('B6', $totalSalidas);
             $sheet->setCellValue('A7', 'Total Disponible');
             $sheet->setCellValue('B7', $totalDisponible);
+
+            $sheet->setCellValue('A9', 'Fecha de Entrada');
+            $sheet->setCellValue('B9', 'Cantidad Entrada');
+            $rowCount = 10;
+
+            foreach ($producto->entradas as $entrada) {
+                $fechaEntrada = Carbon::parse($entrada->fecha_entrada);
+                $sheet->setCellValue('A' . $rowCount, $fechaEntrada->toDateString());
+                $sheet->setCellValue('B' . $rowCount, $entrada->cantidad_entrada);
+                $rowCount++;
+            }
+
+            $rowCount++;
+            $sheet->setCellValue('A' . $rowCount, 'Fecha de Salida');
+            $sheet->setCellValue('B' . $rowCount, 'Cantidad Salida');
+            $rowCount++;
+
+            foreach ($producto->salidas as $salida) {
+                $fechaSalida = Carbon::parse($salida->fecha_salida);
+                $sheet->setCellValue('A' . $rowCount, $fechaSalida->toDateString());
+                $sheet->setCellValue('B' . $rowCount, $salida->cantidad_salida);
+                $rowCount++;
+            }
+
             $writer = new Xlsx($spreadsheet);
             $filename = 'reporte.xlsx';
             header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
